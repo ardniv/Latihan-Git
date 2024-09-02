@@ -9,7 +9,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\profilController;
 use App\Http\Controllers\Auth\ForgetPasswordController;
 
-
+// hiialo
 // Route::get('/', function () {
 //     return view('welcome');
 // });
