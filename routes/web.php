@@ -9,8 +9,10 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\profilController;
 use App\Http\Controllers\Auth\ForgetPasswordController;
 
-// WOI INI KODING BARU DAN GUA LAGI COBA YE BUAT GIT-HUB
 
+// WOI INI KODING BARU DAN GUA LAGI COBA YE BUAT GIT-HUB
+// =======
+// hiialo
 // Route::get('/', function () {
 //     return view('welcome');
 // });
