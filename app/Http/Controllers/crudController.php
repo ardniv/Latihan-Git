@@ -97,6 +97,14 @@ class crudController extends Controller
     }
 
     // CRUD DATA USER
+    public function fetchUsers()
+    {
+        $users = DB::table('user')->get(); // Or use Eloquent model if available
+
+        // Return a partial view with the data (only the table body)
+        return view('partials.user_table', compact('users'))->render();
+    }
+
     public function tambah(Request $request)
     {
         $cekCreate = DB::table('user')->insert([
@@ -106,10 +114,18 @@ class crudController extends Controller
             'role' => $request -> input('create-role'),
         ]);
         // dd($cekCreate);
-        if($cekCreate = 0){
-            return redirect()->back()->with('error', 'FAILED');
+        if (!$cekCreate) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menyimpan data',
+            ], 500);
         }
-        return redirect()->route('user')->with('success', 'Data Added Succesfuly!');
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data berhasil disimpan',
+        ]);
+
     }
 
     public function hapus($id)
