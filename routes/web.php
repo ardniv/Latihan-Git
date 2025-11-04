@@ -19,7 +19,7 @@ use App\Http\Controllers\Auth\ForgetPasswordController;
 // return view('index');
 // })->middleware('auth');
 
-Route::get('/', [LoginController::class,'showLogin'])->name('login');
+Route::get('/login', [LoginController::class,'showLogin'])->name('login');
 Route::post('/login', [LoginController::class,'login']);
 Route::get('/logout', [LoginController::class,'logout'])->name('logout');
 

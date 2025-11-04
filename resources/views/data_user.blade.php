@@ -16,9 +16,23 @@
                 </tr>
             </thead>
             <tbody>
-                {{-- @foreach ($pengguna as $user)
-                    
-                @endforeach --}}
+                @foreach ($pengguna as $user)
+                    <tr>
+                        <td>{{ $user->id }}</td>
+                        <td>{{ $user->nama }}</td>
+                        <td>{{ $user->email }}</td>
+                        <td>{{ $user->role }}</td>
+                        <td>
+                        <button type="button" class="btn btn-primary me-1" onclick="openModalForm(<?=htmlentities(json_encode($user))?>)">Edit</button>
+
+                        <button type="button" class="btn btn-danger me-1" onclick="confirmDelete({{ $user->id }})">Delete</button>
+                        <form id="delete-form-{{ $user->id }}" action="{{ route('die', ['id' => $user->id]) }}" method="POST" style="display: none;">
+                        @csrf
+                        @method('DELETE')
+                        </form>
+                        </td>
+                    </tr>
+                @endforeach
             </tbody>
         </table>
         <!-- Create Modal -->
@@ -26,10 +40,9 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    {{-- <form action="{{route('add')}}" method="POST"> --}}
+                    <form action="{{route('add')}}" method="POST">
                 <h1 class="modal-title fs-5" id="staticBackdropLabel">Create Data</h1>
             </div>
-            <form id="createDataForm">
             <div class="modal-body">
             @csrf
             <div class="mb-3">
@@ -75,7 +88,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    {{-- <form action="{{route('baru')}}" method="POST"> --}}
+                    <form action="{{route('baru')}}" method="POST">
                 <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit User</h1>
             </div>
             <div class="modal-body">
@@ -181,102 +194,4 @@ function confirmDelete(id){
     });
 @endif
 </script>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-$(document).ready(function() {
-    $('#createDataForm').on('submit', function(event) {
-        event.preventDefault(); // Mencegah pengiriman form secara default
-
-        // Ambil data form
-        let formData = {
-            '_token': $('input[name="_token"]').val(),
-            'create-nama': $('#create-nama').val(),
-            'create-email': $('#create-email').val(),
-            'create-password': $('#create-password').val(),
-            'create-role': $('#create-role').val()
-        };
-
-        $.ajax({
-            url: "{{ route('add') }}", // Route yang sesuai untuk handle permintaan
-            type: 'POST',
-            data: formData,
-            dataType: 'json', // Mengharapkan respons JSON
-            success: function(response) {
-                if (response.success){
-                    Swal.fire({
-                    position: "center",
-                    icon: "success",
-                    title: "{{$message}}",
-                    showConfirmButton: false,
-                    timer: 1500
-                    });
-                    $('#insertModal').modal('hide');
-                } else {
-                    Swal.fire({
-                    position: "center",
-                    icon: "error",
-                    title: "{{$message}}",
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-                }
-            },
-            error: function(xhr) {
-                // Tangani error
-                let response = xhr.responseJSON;
-                if (response && response.message) {
-                    alert(response.message); // Tampilkan pesan error dari respons
-                } else {
-                    alert('Terjadi kesalahan yang tidak diketahui.'); // Tangani error tidak dikenal
-                }
-            }
-            
-        });
-    }
-
-        });
-</script>
-
-<script>
-    $(document).ready(function() {
-        // Fungsi untuk memuat data pengguna dengan AJAX
-    function loadUserData() {
-        $.ajax({
-            url: "{{ route('user') }}", // Ganti dengan rute yang sesuai
-            method: 'GET',
-            success: function(response) {
-                var rows = '';
-                $.each(response.pengguna, function(index, user) {
-                    rows += `<tr>
-                        <td>${ user.id }</td>
-                        <td>${ user.nama }</td>
-                        <td>${ user.email }</td>
-                        <td>${ user.role }</td>
-                        <td>
-                        <button type="button" class="btn btn-primary me-1" onclick="openModalForm(<?=htmlentities(json_encode($user))?>)">Edit</button>
-
-                        <button type="button" class="btn btn-danger me-1" onclick="confirmDelete({{ $user->id }})">Delete</button>
-                        <form id="delete-form-{{ $user->id }}" action="{{ route('die', ['id' => $user->id]) }}" method="POST" style="display: none;">
-                        @csrf
-                        @method('DELETE')
-                        </form>
-                        </td>
-                    </tr>`;
-                });
-                $('#myTable tbody').html(rows);
-            },
-            error: function() {
-                alert('Failed to load data');
-            }
-        });
-    }
-
-    // Muat data pengguna saat halaman siap
-    loadUserData();
-    }
-)
-</script>
-
-
 @endsection
